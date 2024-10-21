@@ -32,6 +32,7 @@ import Payment from './pages/home/Payment';
 import CheckSuccess from './pages/home/CheckSuccess';
 import BookingDetails from './pages/bookingHistory/BookingDetails';
 import BookingReview from './pages/review/BookingReview';
+import UserReviews from './pages/review/UserReview';
 
 
 
@@ -60,6 +61,7 @@ const App = () => {
         <Route path="/checkout/:id" element={<CheckOutDetails />} />
         <Route path="/checkout-payment" element={<Payment />} />
         <Route path="/payment-success" element={<CheckSuccess />} />
+        <Route path="/reviews" element={<UserReviews />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/admin/*" element={ <AdminOnlyRoute> <Admin /> </AdminOnlyRoute>} />
         {/* <Route path="*" element={<Error />} /> */}

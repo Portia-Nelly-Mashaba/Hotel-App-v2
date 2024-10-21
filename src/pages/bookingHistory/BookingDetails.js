@@ -22,6 +22,7 @@ const BookingDetails = () => {
         setLoading(false);
       } catch (error) {
         console.error('Error fetching booking data: ', error);
+        setLoading(false); // Ensure loading state is reset on error
       }
     };
     fetchBooking();
@@ -48,8 +49,14 @@ const BookingDetails = () => {
     bookingStatus,
   } = booking;
 
+  // Function to safely convert Firestore Timestamps to Date
+  const toDate = (timestamp) => {
+    return timestamp instanceof Object && timestamp.seconds
+      ? new Date(timestamp.seconds * 1000)
+      : new Date(timestamp); // Fallback if already a date
+  };
+
   const handleCancel = () => {
-    // Implement cancellation functionality here
     console.log('Cancel clicked');
   };
 
@@ -57,10 +64,8 @@ const BookingDetails = () => {
     navigate(`/review-booking/${id}`);
   };
 
-  return(
-
-  <div className="min-h-screen flex flex-col">
-      {/* Main Content */}
+  return (
+    <div className="min-h-screen flex flex-col">
       <section className="py-24 flex-grow">
         <div className="w-full max-w-7xl mx-auto px-4 md:px-8">
           <h2 className="font-manrope font-extrabold text-3xl lead-10 text-black mb-9">Booking Details</h2>
@@ -112,8 +117,8 @@ const BookingDetails = () => {
                     <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-500">{bookingDate}</td>
                     <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-500">{roomType}</td>
                     <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-500">{roomNo}</td>
-                    <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-500">{checkInDate.toDate().toLocaleDateString()}</td>
-                    <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-500">{checkOutDate.toDate().toLocaleDateString()}</td>
+                    <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-500">{toDate(checkInDate).toLocaleDateString()}</td>
+                    <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-500">{toDate(checkOutDate).toLocaleDateString()}</td>
                     <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-500">{adults}</td>
                     <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-500">{kids}</td>
                     <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-500">{numberOfNights}</td>

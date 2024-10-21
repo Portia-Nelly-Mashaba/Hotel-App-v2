@@ -32,30 +32,36 @@ const CheckoutForm = () => {
     checkOutDate,
     adults,
     kids,
+    id,
     roomType: room_type,  
     roomNo: room_no,  
   } = state;
   console.log("State data:", state);
 
-  // Function to save the booking to Firestore
   const saveBooking = async () => {
     const today = new Date();
+  
+    // Check if checkInDate and checkOutDate are Timestamps and convert them to ISO strings
+    const formattedCheckInDate = checkInDate instanceof Date ? checkInDate.toISOString() : new Date(checkInDate).toISOString();
+    const formattedCheckOutDate = checkOutDate instanceof Date ? checkOutDate.toISOString() : new Date(checkOutDate).toISOString();
+  
     const bookingData = {
       userEmail,
       userName,
       userAddress,
       totalAmount,
       numberOfNights,
-      checkInDate,
-      checkOutDate,
+      checkInDate: formattedCheckInDate, 
+      checkOutDate: formattedCheckOutDate,
       adults,
       kids,
+      roomId: id,
       roomNo: room_no,  
       roomType: room_type,  
-      bookingDate: today.toDateString(), 
+      bookingDate: today.toISOString(), 
       bookingTime: today.toLocaleTimeString(), 
       bookingStatus: "Room Booked",
-      createdAt: Timestamp.now(), 
+      createdAt: today.toISOString(), // Convert to ISO string
     };
 
     try {
