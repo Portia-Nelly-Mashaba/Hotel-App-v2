@@ -1,8 +1,10 @@
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import React, { useEffect, useState } from 'react';
 import { db } from '../../firebase/config';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { Menu, Transition } from '@headlessui/react';
+import { toast, ToastContainer } from 'react-toastify'; // Import toast functions
+import 'react-toastify/dist/ReactToastify.css'; // Import CSS for toast
 
 const BookingDetails = () => {
   const [booking, setBooking] = useState(null);
@@ -28,6 +30,22 @@ const BookingDetails = () => {
     fetchBooking();
   }, [id]);
 
+  const handleCancel = async () => {
+    try {
+      const bookingDoc = doc(db, 'bookings', id);
+      await updateDoc(bookingDoc, { bookingStatus: 'cancelled' });
+      toast.success('Booking successfully cancelled!'); 
+      setBooking((prev) => ({ ...prev, bookingStatus: 'cancelled' })); 
+    } catch (error) {
+      console.error('Error cancelling booking: ', error);
+      toast.error('Failed to cancel the booking.'); 
+    }
+  };
+
+  const handleReview = () => {
+    navigate(`/review-booking/${id}`);
+  };
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -49,23 +67,15 @@ const BookingDetails = () => {
     bookingStatus,
   } = booking;
 
-  // Function to safely convert Firestore Timestamps to Date
   const toDate = (timestamp) => {
     return timestamp instanceof Object && timestamp.seconds
       ? new Date(timestamp.seconds * 1000)
       : new Date(timestamp); // Fallback if already a date
   };
 
-  const handleCancel = () => {
-    console.log('Cancel clicked');
-  };
-
-  const handleReview = () => {
-    navigate(`/review-booking/${id}`);
-  };
-
   return (
     <div className="min-h-screen flex flex-col">
+      <ToastContainer /> {/* Include ToastContainer for notifications */}
       <section className="py-24 flex-grow">
         <div className="w-full max-w-7xl mx-auto px-4 md:px-8">
           <h2 className="font-manrope font-extrabold text-3xl lead-10 text-black mb-9">Booking Details</h2>
@@ -88,7 +98,7 @@ const BookingDetails = () => {
                     bookingStatus === 'Cancelled' ? 'text-red-500' :
                       bookingStatus === 'Check-In' ? 'text-orange-500' :
                         bookingStatus === 'Completed' ? 'text-blue-900' : 'text-gray-500'
-                  }`}>
+                    }`}>
                     {bookingStatus}
                   </span>
                 </div>
@@ -142,9 +152,7 @@ const BookingDetails = () => {
                                 {({ active }) => (
                                   <button
                                     onClick={handleCancel}
-                                    className={`${
-                                      active ? 'bg-gray-100' : ''
-                                    } block px-4 py-2 text-sm text-red-500 w-full text-left`}
+                                    className={`${active ? 'bg-gray-100' : ''} block px-4 py-2 text-sm text-red-500 w-full text-left`}
                                   >
                                     Cancel
                                   </button>
@@ -153,10 +161,9 @@ const BookingDetails = () => {
                               <Menu.Item>
                                 {({ active }) => (
                                   <button
-                                    onClick={handleReview}
-                                    className={`${
-                                      active ? 'bg-gray-100' : ''
-                                    } block px-4 py-2 text-sm text-blue-500 w-full text-left`}
+                                    onClick={bookingStatus !== 'Room Booked' && bookingStatus !== 'Cancelled' ? handleReview : null}
+                                    className={`${active ? 'bg-gray-100' : ''} block px-4 py-2 text-sm text-blue-500 w-full text-left ${bookingStatus === 'Room Booked' || bookingStatus === 'Cancelled' ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                    disabled={bookingStatus === 'Room Booked' || bookingStatus === 'Cancelled'}
                                   >
                                     Review
                                   </button>

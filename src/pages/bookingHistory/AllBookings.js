@@ -53,7 +53,7 @@ const AllBookings = () => {
   }
 
   const filteredBookings = bookings.filter((booking) => {
-    //console.log("Filtering booking:", booking); 
+     
     return booking.userEmail === userEmail; 
 });
 
