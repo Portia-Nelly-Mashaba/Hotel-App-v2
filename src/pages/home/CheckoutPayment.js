@@ -16,12 +16,12 @@ export default function CheckoutForm() {
   const elements = useElements();
 
   const {
-    totalAmount = 0,
-    numberOfNights = 0,
+    totalAmount ,
+    numberOfNights ,
     checkInDate = "",
     checkOutDate = "",
-    adults = 1,
-    kids = 0,
+    adults,
+    kids,
     amountPerNight,
     roomCapacity,
     userEmail,

@@ -93,12 +93,12 @@ const CheckOutDetails = () => {
     navigate('/checkout-payment', {
       state: {
         id,
-        totalAmount: totalAmount || 0,  
-        numberOfNights: numberOfNights || 0,
-        checkInDate: checkInDate || '',
-        checkOutDate: checkOutDate || '',
-        adults: adults || 1,
-        kids: kids || 0,
+        totalAmount,  
+        numberOfNights,
+        checkInDate,
+        checkOutDate,
+        adults,
+        kids,
         billingAddress,
         roomType,
         roomNo,

@@ -228,6 +228,8 @@ const Summary = () => {
                     checkInDate,
                     checkOutDate,
                     roomNo,
+                    adults,
+                    kids,
                   }}
                 >
                   <button
